@@ -1,30 +1,34 @@
 #include <stdio.h>
-#define NUMVERT 5
+#include "grafo.h"
+#include <stdlib.h>
  
-void exibir_grafo(int grafo[NUMVERT][NUMVERT]){
-    for(int i=0; i<NUMVERT; i++){
-        for(int j=0; j<NUMVERT; j++){
-            printf(" %d ", grafo[i][j]);
+/*
+void exibir_grafo(Grafo *grafo){
+    for(int i=0; i<grafo->numVert; i++){
+        for(int j=0; j<grafo->numVert; j++){
+            printf(" %d ", (grafo->matriz)[i][j]);
         }
         printf("\n");
     }
 }
 
-void add_elemento(int grafo[NUMVERT][NUMVERT], int linha, int coluna){
-    grafo[linha][coluna] = 1;
-    grafo[coluna][linha] = 1;
+void add_elemento(Grafo *grafo, int linha, int coluna){
+    grafo->matriz[linha][coluna] = 1;
+    grafo->matriz[coluna][linha] = 1;
 }
 
-int numero_vertices(){}
+int numero_vertices(Grafo *grafo){
+    return grafo->numVert;
+}
 
-int numero_arestas(int grafo[NUMVERT][NUMVERT]){
+int numero_arestas(Grafo *grafo){
     int cont  = 0, dp = 0, num_arestas = 0;
-    for(int i=0; i<NUMVERT; i++){
-        for(int j=0; j<NUMVERT; j++){
-            if(grafo[i][j] == 1 && i != j){
+    for(int i=0; i<grafo->numVert; i++){
+        for(int j=0; j<grafo->numVert; j++){
+            if(grafo->matriz[i][j] == 1 && i != j){
                 cont++;
             }
-            if(i == j && grafo[i][j]==1){
+            if(i == j && grafo->matriz[i][j]==1){
                 dp++;
             }
         }
@@ -34,12 +38,12 @@ int numero_arestas(int grafo[NUMVERT][NUMVERT]){
     return(num_arestas);
 }
 
-int grau_maior(int grafo[NUMVERT][NUMVERT]){
+int grau_maior(Grafo *grafo){
     int aux, maior = 0, pos_maior = 0;
-    for(int i=0; i<NUMVERT; i++){
+    for(int i=0; i<grafo->numVert; i++){
         aux = 0;
-        for(int j=0; j<NUMVERT; j++){
-            if(grafo[i][j] == 1){
+        for(int j=0; j<grafo->numVert; j++){
+            if(grafo->matriz[i][j] == 1){
                 aux++;
             }
         }
@@ -51,12 +55,12 @@ int grau_maior(int grafo[NUMVERT][NUMVERT]){
     return(maior);
 }
 
-int grau_menor(int grafo[NUMVERT][NUMVERT]){
-    int aux, menor = NUMVERT, pos_menor = 0;
-    for(int i=0; i<NUMVERT; i++){
+int grau_menor(Grafo *grafo){
+    int aux, menor = grafo->numVert, pos_menor = 0;
+    for(int i=0; i<grafo->numVert; i++){
         aux = 0;
-        for(int j=0; j<NUMVERT; j++){
-            if(grafo[i][j] == 1){
+        for(int j=0; j<grafo->numVert; j++){
+            if(grafo->matriz[i][j] == 1){
                 aux++;
             }
         }
@@ -68,34 +72,34 @@ int grau_menor(int grafo[NUMVERT][NUMVERT]){
     return(menor);
 }
 
-float grau_medio(int grafo[NUMVERT][NUMVERT]){
+float grau_medio(Grafo *grafo){
     float cont=0, grau=0;
-    for(int i=0; i<NUMVERT; i++){
-        for(int j=0; j<NUMVERT; j++){
-            if(grafo[i][j] == 1){
+    for(int i=0; i<grafo->numVert; i++){
+        for(int j=0; j<grafo->numVert; j++){
+            if(grafo->matriz[i][j] == 1){
                 cont++;
             }
         }
     }
-    grau = cont/NUMVERT;
+    grau = cont/grafo->numVert;
     return(grau);
 }
 
-float mediana(int grafo[NUMVERT][NUMVERT]){
-    int graus[NUMVERT];
+float mediana(Grafo *grafo){
+    int graus[grafo->numVert];
     int aux;
 
-    for(int i=0; i<NUMVERT; i++){
+    for(int i=0; i<grafo->numVert; i++){
         graus[i] = 0;
-        for(int j=0; j<NUMVERT; j++){
-            if(grafo[i][j] == 1){
+        for(int j=0; j<grafo->numVert; j++){
+            if(grafo->matriz[i][j] == 1){
                 graus[i]++;
             }
         }
     }
 
-    for(int i=0; i<NUMVERT-1; i++){
-        for(int j=i+1; j<NUMVERT; j++){
+    for(int i=0; i<grafo->numVert-1; i++){
+        for(int j=i+1; j<grafo->numVert; j++){
             if(graus[i] > graus[j]){
                 aux = graus[i];
                 graus[i] = graus[j];
@@ -104,15 +108,53 @@ float mediana(int grafo[NUMVERT][NUMVERT]){
         }
     }
 
-    for(int i=0; i<NUMVERT; i++){
+    for(int i=0; i<grafo->numVert; i++){
     printf("%d ", graus[i]);
     }
     printf("\n");
 
-    if(NUMVERT % 2 != 0){
-        return(graus[NUMVERT/2]);
+    if(grafo->numVert % 2 != 0){
+        return(graus[grafo->numVert/2]);
     }
     else{
-        return((graus[NUMVERT/2] + graus[(NUMVERT/2)-1])/2.0);
+        return((graus[grafo->numVert/2] + graus[(grafo->numVert/2)-1])/2.0);
     }
 }
+
+*/
+Grafo *criarMatriz(int numVert){
+    Grafo *grafo = (Grafo *) malloc(sizeof(Grafo));
+
+    grafo->numVert = numVert;
+
+    for(int i=0; i<numVert; i++){
+        for(int j=0; j<numVert; j++){
+            printf("teste 0\n");
+
+            grafo->matriz[i][j] = 0;
+            printf("teste 1\n");
+        }
+    }
+
+    return grafo;
+}
+/*
+void lerArquivo(Grafo *grafo, const char *nomeArquivo){
+    FILE *arquivo;
+    int numVert, vert1, vert2;
+   
+    if((arquivo=fopen(nomeArquivo, "r"))==NULL){
+        printf("\nErro ao abrir arquivo!");
+    } else {
+        fscanf(arquivo, "%d\n", &numVert);
+        //matriz = criarMatriz(numVert);
+        
+        while (!feof(arquivo))
+        {
+            fscanf(arquivo, "%d %d\n", &vert1, &vert2);
+            add_elemento(grafo, vert1-1, vert2-1);
+        }
+    }
+}
+*/
+
