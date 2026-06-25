@@ -1,16 +1,12 @@
 #include <stdio.h>
 #include "grafo.h"
-#define NUMVERT 5
+
 
 int main(){
-    int grafo[NUMVERT][NUMVERT] = {{0, 1, 0, 0, 1},
-                                   {1, 0, 1, 1, 0},
-                                   {0, 1, 0, 0, 0}, 
-                                   {0, 1, 0, 0, 1},
-                                   {1, 0, 0, 1, 0}
-                                };
+    Grafo *grafo = criarMatriz(5);
     
-    add_elemento(grafo, 4 ,1);
+
+    /*add_elemento(grafo, 4 ,1);
     add_elemento(grafo, 4 ,2);
 
     exibir_grafo(grafo);
@@ -29,4 +25,10 @@ int main(){
 
     float med = mediana(grafo);
     printf("\nMediana dos graus: %.f", med);
+    printf("\n");
+
+    lerArquivo(grafo, "examples/grafo.txt"); 
+    exibir_grafo(grafo);
+    */
+
 }
