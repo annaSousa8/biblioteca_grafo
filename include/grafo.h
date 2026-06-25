@@ -1,17 +1,27 @@
-#define NUMVERT 5
 
-void exibir_grafo(int grafo[NUMVERT][NUMVERT]);
+typedef struct Grafo
+{
+    int numVert;
+    int **matriz;
+} Grafo;
 
-void add_elemento(int grafo[NUMVERT][NUMVERT], int linha, int coluna);
 
-int numero_vertices();
+void exibir_grafo(Grafo *grafo);
 
-int numero_arestas(int grafo[NUMVERT][NUMVERT]);
+void add_elemento(Grafo *grafo, int linha, int coluna);
 
-int grau_maior(int grafo[NUMVERT][NUMVERT]);
+int numero_vertices(Grafo *grafo);
 
-int grau_menor(int grafo[NUMVERT][NUMVERT]);
+int numero_arestas(Grafo *grafo);
 
-float grau_medio(int grafo[NUMVERT][NUMVERT]);
+int grau_maior(Grafo *grafo);
 
-float mediana(int grafo[NUMVERT][NUMVERT]);
+int grau_menor(Grafo *grafo);
+
+float grau_medio(Grafo *grafo);
+
+float mediana(Grafo *grafo);
+
+Grafo *criarMatriz(int numVert);
+
+void lerArquivo(Grafo *grafo, const char *nomeArquivo);
