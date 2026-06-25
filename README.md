@@ -9,5 +9,5 @@ gcc --version
 Para rodar os testes, rode:
 
 ```
-gcc -Iinclude testes/teste.c src/grafo.c -o bin/grafo
+gcc -Iinclude src/*.c testes/teste_d.c -o bin/grafo
 ```
