@@ -4,15 +4,6 @@
 #include <stdlib.h>
 #include <stdio.h>
 
-typedef struct elem{
-    int valor;
-    struct elem *prox;
-}Elem;
-
-typedef struct grafo{
-    Elem **lista;
-    int tam;
-}Grafo;
 
 Grafo * criar_grafo(int tam) {
 	Elem **lista = (Elem **) malloc(sizeof(Elem *)*tam);
