@@ -57,8 +57,32 @@ int grafo_adicionar_no(Grafo *g, int n1, int n2){
 int grafo_num_arestas( Grafo *g);
 int grafo_num_vertices( Grafo *g);
 
-int grafo_grau_min( Grafo *g);
-int grafo_grau_max( Grafo *g);
+int grafo_grau_min( Grafo *g){
+    int grau = -1;
+    Elem *aux;
+
+    for(int i=0;i<g->tam; i++){
+        int cntg=0;
+        for(aux=g->lista[i];aux!=NULL;cntg++, aux=aux->prox);
+        if(cntg<grau||grau==-1)
+            grau = cntg;
+    }
+
+    return grau;
+}
+int grafo_grau_max( Grafo *g){
+    int grau = -1;
+    Elem *aux;
+
+    for(int i=0;i<g->tam; i++){
+        int cntg=0;
+        for(aux=g->lista[i];aux!=NULL;cntg++,aux=aux->prox);
+        if(cntg>grau)
+            grau = cntg;
+    }
+
+    return grau;
+}
 float grafo_grau_medio(Grafo *g){
 	int graus[g->tam];
 	int total=0;
