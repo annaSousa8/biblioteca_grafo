@@ -20,7 +20,7 @@ Grafo * criar_grafo(int tam) {
 }
 void destroir( Grafo *g ){
     Elem *atual, *prox;
-    printf("destroir\n");
+    printf("\ndestroir\n");
 
     for(int i=0; i<5; i++){
         atual=g->lista[i];
@@ -34,6 +34,7 @@ void destroir( Grafo *g ){
 }
 
 int grafo_adicionar_no(Grafo *g, int n1, int n2){
+
 	if(!((n1-1)>=0&&(n1-1)<g->tam)||!((n2-1)>=0&&(n2-1)<g->tam))
 		return 0;
 
@@ -120,11 +121,12 @@ float grafo_grau_mediano(Grafo *g){
 void grafo_mostrar(Grafo *g){
 	Elem *aux;
 	for(int i=0;i<g->tam;i++){
-		printf("\nNo %d\n\t",i);
+		printf("No %d\n\t",i);
 
 		for(aux=g->lista[i];aux!=NULL;aux=aux->prox)
 			printf("%d ", aux->valor);
 
+		printf("\n");
 	}
 }
 void grafo_limpar(Grafo *g){
