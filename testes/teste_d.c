@@ -16,9 +16,14 @@ int main(){
 
     grafo_mostrar(g);
 
-    printf("\nA media do grafo eh %.2f\n", grafo_grau_medio(g));
 
+
+    printf("\nO grafo possui %d arestas\n", grafo_num_arestas(g));
+    printf("\nO grafo possui %d vertices\n", grafo_num_vertices(g));
+
+    printf("\nA media do grafo eh %.2f\n", grafo_grau_medio(g));
     printf("\nA mediano do grafo eh %.2f\n", grafo_grau_mediano(g));
+
 
     printf("\nO grau minimo do grafo eh %d\n", grafo_grau_min(g));
 
@@ -30,6 +35,20 @@ int main(){
     lerArquivo(g, "./examples/grafo.txt");
 
     grafo_mostrar(g);
+
+
+
+    printf("\nO grafo possui %d arestas\n", grafo_num_arestas(g));
+    printf("\nO grafo possui %d vertices\n", grafo_num_vertices(g));
+
+    printf("\nA media do grafo eh %.2f\n", grafo_grau_medio(g));
+    printf("\nA mediano do grafo eh %.2f\n", grafo_grau_mediano(g));
+
+
+    printf("\nO grau minimo do grafo eh %d\n", grafo_grau_min(g));
+
+    printf("\nO grau maximo do grafo eh %d\n", grafo_grau_max(g));
+
 
     destroir(g);
 
