@@ -55,8 +55,18 @@ int grafo_adicionar_no(Grafo *g, int n1, int n2){
 	return 1;
 }
 
-int grafo_num_arestas( Grafo *g);
-int grafo_num_vertices( Grafo *g);
+int grafo_num_arestas( Grafo *g){
+    return g->tam;
+}
+int grafo_num_vertices( Grafo *g){
+    int totalVert=0;
+    Elem *aux;
+
+    for(int i=0;i<g->tam; i++)
+        for(aux=g->lista[i];aux!=NULL;totalVert++, aux=aux->prox);
+
+    return totalVert;
+}
 
 int grafo_grau_min( Grafo *g){
     int grau = -1;
