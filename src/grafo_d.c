@@ -119,13 +119,13 @@ float grafo_grau_mediano(Grafo *g){
 			graus[i]++;
 	}
 
-    merge_sort(graus, 0, g->tam);
+    merge_sort(graus, 0, g->tam-1);
 
     if(g->tam/2>0){
-        return graus[(g->tam/2)+1];
+        return graus[g->tam/2];
     }
 
-    return ((graus[g->tam/2]+graus[(g->tam/2)+1])/2);
+    return ((graus[g->tam/2]+graus[(g->tam/2)-1])/2);
 }
 
 void grafo_mostrar(Grafo *g){
