@@ -23,3 +23,5 @@ float grafo_grau_mediano(Grafo *g);
 
 void grafo_mostrar(Grafo *g);
 void grafo_limpar(Grafo *g);
+
+void lerArquivo(Grafo *grafo, const char *nomeArquivo);

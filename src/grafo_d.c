@@ -140,3 +140,22 @@ void grafo_limpar(Grafo *g){
         g->lista[i]=NULL;
     }
 }
+
+void lerArquivo(Grafo *g, const char *nomeArquivo){
+    FILE *arquivo;
+    int numVert, vert1, vert2;
+
+
+    if((arquivo=fopen(nomeArquivo, "r"))==NULL){
+        printf("\nErro ao abrir arquivo!");
+    } else {
+        fscanf(arquivo, "%d\n", &numVert);
+
+        while (!feof(arquivo))
+        {
+            fscanf(arquivo, "%d %d\n", &vert1, &vert2);
+            printf("%d %d\n", vert1, vert2);
+            grafo_adicionar_no(g, vert1, vert2);
+        }
+    }
+}
