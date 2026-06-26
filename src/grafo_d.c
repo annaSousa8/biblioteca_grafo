@@ -20,7 +20,6 @@ Grafo * criar_grafo(int tam) {
 }
 void destroir( Grafo *g ){
     Elem *atual, *prox;
-    printf("\ndestroir\n");
 
     for(int i=0; i<5; i++){
         atual=g->lista[i];
@@ -166,7 +165,6 @@ void lerArquivo(Grafo *g, const char *nomeArquivo){
         while (!feof(arquivo))
         {
             fscanf(arquivo, "%d %d\n", &vert1, &vert2);
-            printf("%d %d\n", vert1, vert2);
             grafo_adicionar_no(g, vert1, vert2);
         }
     }
