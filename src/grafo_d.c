@@ -127,3 +127,16 @@ void grafo_mostrar(Grafo *g){
 
 	}
 }
+void grafo_limpar(Grafo *g){
+    Elem *atual, *prox;
+
+    for(int i=0; i<5; i++){
+        atual=g->lista[i];
+        while(atual!=NULL){
+            prox=atual->prox;
+            free(atual);
+            atual=prox;
+        }
+        g->lista[i]=NULL;
+    }
+}

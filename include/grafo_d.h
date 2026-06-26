@@ -22,3 +22,4 @@ float grafo_grau_medio(Grafo *g);
 float grafo_grau_mediano(Grafo *g);
 
 void grafo_mostrar(Grafo *g);
+void grafo_limpar(Grafo *g);
