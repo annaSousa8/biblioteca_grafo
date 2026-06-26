@@ -8,6 +8,8 @@ int main(){
     grafo_adicionar_no(g, 1, 2);
     grafo_adicionar_no(g, 2, 3);
     grafo_adicionar_no(g, 4, 5);
+    grafo_adicionar_no(g, 4, 1);
+    grafo_adicionar_no(g, 4, 3);
     //grafo_adicionar_no(g, 3, 4);
     //grafo_adicionar_no(g, 4, 5);
     //grafo_adicionar_no(g, 5, 1);
@@ -18,6 +20,16 @@ int main(){
 
     printf("\nA mediano do grafo eh %.2f\n", grafo_grau_mediano(g));
 
+    printf("\nO grau minimo do grafo eh %d\n", grafo_grau_min(g));
+
+    printf("\nO grau maximo do grafo eh %d\n", grafo_grau_max(g));
+
+
+    grafo_limpar(g);
+
+    lerArquivo(g, "./examples/grafo.txt");
+
+    grafo_mostrar(g);
 
     destroir(g);
 
