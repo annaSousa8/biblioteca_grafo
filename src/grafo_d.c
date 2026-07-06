@@ -41,6 +41,7 @@ int grafo_adicionar_no(Grafo *g, int n1, int n2){
 
 	elem2->valor = n2-1;
 	elem2->prox = g->lista[n1-1];
+    elem2->visitado = 0;
 
 	g->lista[n1-1] = elem2;
 
@@ -48,6 +49,7 @@ int grafo_adicionar_no(Grafo *g, int n1, int n2){
 
 	elem1->valor = n1-1;
 	elem1->prox = g->lista[n2-1];
+    elem1->visitado = 0;
 
 	g->lista[n2-1] = elem1;
 
@@ -169,3 +171,21 @@ void lerArquivo(Grafo *g, const char *nomeArquivo){
         }
     }
 }
+
+void dfs(Grafo *g, int idx){
+    alg_dfs(g, idx, 0);
+}
+
+void alg_dfs(Grafo *g, int idx, int nvl){
+
+    printf("%d %d\n", idx, nvl);
+    g->lista[idx]->visitado = 1;
+
+
+    for(Elem *elem = g->lista[idx];elem!=NULL;elem=elem->prox){
+        if(!g->lista[elem->valor]->visitado)
+            alg_dfs(g,elem->valor, nvl+1);
+    }
+
+}
+
