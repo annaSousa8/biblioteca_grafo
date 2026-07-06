@@ -192,3 +192,30 @@ void alg_dfs(Grafo *g, int idx, int nvl, char *visitados){
 
 }
 
+void bfs(Grafo *g, int idx){
+    char *visitados = (char*) malloc(sizeof(char)*g->tam);
+    for(int i=0;i<g->tam;i++)
+        visitados[i]='n';
+
+    int *ordem = (int *) malloc(sizeof(int)*g->tam);
+    for(int i=0;i<g->tam;i++)
+        ordem[i]=0;
+
+    int i = 0;
+
+    alg_bfs(g, idx, 0, visitados, ordem, &i);
+}
+
+void alg_bfs(Grafo *g, int idx, int nvl, char *visitados, int *ordem, int *i){
+
+    printf("%d %d\n", idx, nvl);
+    visitados[idx] = 'v';
+
+
+    for(Elem *elem = g->lista[idx];elem!=NULL;elem=elem->prox){
+        if(visitados[elem->valor]=='n')
+            ordem[*i}
+
+    }
+
+}
