@@ -22,6 +22,6 @@ float grau_medio(Grafo *grafo);
 
 float mediana(Grafo *grafo);
 
-Grafo *criarMatriz(int numVert);
+Grafo *criarGrafo(int numVert);
 
 void lerArquivo(Grafo *grafo, const char *nomeArquivo);

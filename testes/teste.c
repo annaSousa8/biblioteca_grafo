@@ -3,13 +3,21 @@
 
 
 int main(){
-    Grafo *grafo = criarMatriz(5);
+    Grafo *grafo = criarGrafo(6);
     
-
-    /*add_elemento(grafo, 4 ,1);
-    add_elemento(grafo, 4 ,2);
-
     exibir_grafo(grafo);
+
+    add_elemento(grafo, 0 ,1);
+    add_elemento(grafo, 0 ,4);
+    add_elemento(grafo, 1 ,4);
+    add_elemento(grafo, 2 ,4);
+    add_elemento(grafo, 3 ,4);
+
+    printf("\n");
+    exibir_grafo(grafo);
+
+    int vert = numero_vertices(grafo);
+    printf("\nNumero de vertices: %d", vert);
 
     int num_arestas = numero_arestas(grafo);
     printf("\nNumero de arestas: %d", num_arestas);
@@ -24,11 +32,10 @@ int main(){
     printf("\nGrau medio: %f", g);
 
     float med = mediana(grafo);
-    printf("\nMediana dos graus: %.f", med);
-    printf("\n");
-
+    printf("\nMediana dos graus: %.3f", med);
+    
+    /*
     lerArquivo(grafo, "examples/grafo.txt"); 
-    exibir_grafo(grafo);
     */
 
 }

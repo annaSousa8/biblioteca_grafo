@@ -1,8 +1,9 @@
 #include <stdio.h>
 #include "grafo.h"
+#include "merge_sort.h"
 #include <stdlib.h>
  
-/*
+
 void exibir_grafo(Grafo *grafo){
     for(int i=0; i<grafo->numVert; i++){
         for(int j=0; j<grafo->numVert; j++){
@@ -12,14 +13,17 @@ void exibir_grafo(Grafo *grafo){
     }
 }
 
+
 void add_elemento(Grafo *grafo, int linha, int coluna){
     grafo->matriz[linha][coluna] = 1;
     grafo->matriz[coluna][linha] = 1;
 }
 
+
 int numero_vertices(Grafo *grafo){
     return grafo->numVert;
 }
+
 
 int numero_arestas(Grafo *grafo){
     int cont  = 0, dp = 0, num_arestas = 0;
@@ -38,6 +42,7 @@ int numero_arestas(Grafo *grafo){
     return(num_arestas);
 }
 
+
 int grau_maior(Grafo *grafo){
     int aux, maior = 0, pos_maior = 0;
     for(int i=0; i<grafo->numVert; i++){
@@ -54,6 +59,7 @@ int grau_maior(Grafo *grafo){
     }
     return(maior);
 }
+
 
 int grau_menor(Grafo *grafo){
     int aux, menor = grafo->numVert, pos_menor = 0;
@@ -72,6 +78,7 @@ int grau_menor(Grafo *grafo){
     return(menor);
 }
 
+
 float grau_medio(Grafo *grafo){
     float cont=0, grau=0;
     for(int i=0; i<grafo->numVert; i++){
@@ -84,6 +91,7 @@ float grau_medio(Grafo *grafo){
     grau = cont/grafo->numVert;
     return(grau);
 }
+
 
 float mediana(Grafo *grafo){
     int graus[grafo->numVert];
@@ -98,20 +106,7 @@ float mediana(Grafo *grafo){
         }
     }
 
-    for(int i=0; i<grafo->numVert-1; i++){
-        for(int j=i+1; j<grafo->numVert; j++){
-            if(graus[i] > graus[j]){
-                aux = graus[i];
-                graus[i] = graus[j];
-                graus[j] = aux;
-            }
-        }
-    }
-
-    for(int i=0; i<grafo->numVert; i++){
-    printf("%d ", graus[i]);
-    }
-    printf("\n");
+    merge_sort(graus, 0, grafo->numVert);
 
     if(grafo->numVert % 2 != 0){
         return(graus[grafo->numVert/2]);
@@ -121,23 +116,21 @@ float mediana(Grafo *grafo){
     }
 }
 
-*/
-Grafo *criarMatriz(int numVert){
-    Grafo *grafo = (Grafo *) malloc(sizeof(Grafo));
 
-    grafo->numVert = numVert;
+Grafo *criarGrafo(int numVert){
+    Grafo *grafo = (Grafo *) malloc(sizeof(Grafo*));
 
-    for(int i=0; i<numVert; i++){
-        for(int j=0; j<numVert; j++){
-            printf("teste 0\n");
+    int **matriz = (int **) malloc(sizeof(int *) * numVert);
 
-            grafo->matriz[i][j] = 0;
-            printf("teste 1\n");
-        }
+    for(int i = 0; i < numVert; i++){
+        matriz[i] = (int *) calloc(numVert, sizeof(int));
     }
 
+    grafo->numVert = numVert;
+    grafo->matriz = matriz;
     return grafo;
 }
+
 /*
 void lerArquivo(Grafo *grafo, const char *nomeArquivo){
     FILE *arquivo;
