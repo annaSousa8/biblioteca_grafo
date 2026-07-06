@@ -28,4 +28,4 @@ void grafo_limpar(Grafo *g);
 void lerArquivo(Grafo *grafo, const char *nomeArquivo);
 
 void dfs(Grafo *grafo, int idx);
-void alg_dfs(Grafo *g, int idx, int nvl);
+void alg_dfs(Grafo *g, int idx, int nvl, char *visitados);

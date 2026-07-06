@@ -173,18 +173,21 @@ void lerArquivo(Grafo *g, const char *nomeArquivo){
 }
 
 void dfs(Grafo *g, int idx){
-    alg_dfs(g, idx, 0);
+    char *visitados = (char*) malloc(sizeof(char)*g->tam);
+    for(int i=0;i<g->tam;i++)
+        visitados[i]='n';
+    alg_dfs(g, idx, 0, visitados);
 }
 
-void alg_dfs(Grafo *g, int idx, int nvl){
+void alg_dfs(Grafo *g, int idx, int nvl, char *visitados){
 
     printf("%d %d\n", idx, nvl);
-    g->lista[idx]->visitado = 1;
+    visitados[idx] = 'v';
 
 
     for(Elem *elem = g->lista[idx];elem!=NULL;elem=elem->prox){
-        if(!g->lista[elem->valor]->visitado)
-            alg_dfs(g,elem->valor, nvl+1);
+        if(visitados[elem->valor]=='n')
+            alg_dfs(g,elem->valor, nvl+1, visitados);
     }
 
 }
