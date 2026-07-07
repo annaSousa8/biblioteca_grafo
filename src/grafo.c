@@ -207,8 +207,7 @@ void bfs_matriz(Grafo *grafo, int inicio, const char *arquivoSaida){
     int *nivel = malloc(sizeof(int) * grafo->numVert);
     char *visitados = malloc(sizeof(char) * grafo->numVert);
     int fila[grafo->numVert];
-    int ini = 0;
-    int fim = 0;
+    int ini = 0, fim = 0;
 
     for(int i=0; i<grafo->numVert; i++){
         pai[i] = -1;
@@ -242,3 +241,40 @@ void bfs_matriz(Grafo *grafo, int inicio, const char *arquivoSaida){
     free(nivel);
     free(visitados);
 }
+
+
+void bfs_nivel(Grafo *grafo, int inicio, int *nivel){
+    char *visitados = (char *) malloc(sizeof(char)*grafo->numVert);
+    int fila[grafo->numVert];
+    int ini = 0, fim = 0;
+
+    for(int i=0; i<grafo->numVert; i++){
+        visitados[i] = 'n';
+        nivel[i] = -1;
+    }
+    visitados[inicio] = 'v';
+    nivel[inicio] = 0;
+    fila[fim++] = inicio;
+
+    while (ini < fim){
+        int atual = fila[ini++];
+        for(int j=0; j<grafo->numVert; j++){
+            if(grafo->matriz[atual][j] == 1 && visitados[j] == 'n'){
+                visitados[j] = 'v';
+                nivel[j] = nivel[atual] + 1;
+                fila[fim++] = j;
+            }
+        }
+    }
+    free(visitados);
+}
+
+
+int distancia(Grafo *grafo, int origem, int destino){
+    int *nivel = (int *) malloc(sizeof(int) * grafo->numVert);
+    bfs_nivel(grafo, origem, nivel);
+    int dist = nivel[destino];
+    free(nivel);
+    return dist;
+}
+

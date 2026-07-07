@@ -29,3 +29,5 @@ Grafo *ler_arquivo(const char *nomeArquivo);
 void dfs_matriz(Grafo *grafo, int inicio, const char *arquivoSaida);
 
 void bfs_matriz(Grafo *grafo, int inicio, const char *arquivoSaida);
+
+int distancia(Grafo *grafo, int origem, int destino);

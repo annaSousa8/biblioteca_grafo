@@ -31,4 +31,8 @@ int main(){
     dfs_matriz(grafo, 0, "bin/saida_dfs.txt");
     bfs_matriz(grafo, 0, "bin/saida_bfs.txt");
 
+   
+    int dis = distancia(grafo, 0, 4);
+    printf("\nDistancia: %d", dis);
+
 }
