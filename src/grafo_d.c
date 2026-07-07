@@ -192,7 +192,7 @@ void alg_dfs(Grafo *g, int idx, int nvl, char *visitados){
 
 }
 
-void bfs(Grafo *g, int idx){
+int bfs(Grafo *g, int idx){
     int *visitados = (int*) malloc(sizeof(int)*g->tam);
     for(int i=0;i<g->tam;i++)
         visitados[i]=-1;
@@ -201,26 +201,44 @@ void bfs(Grafo *g, int idx){
     for(int i=0;i<g->tam;i++)
         ordem[i]=0;
 
-    visitados[0] = 0;
-    alg_bfs(g, visitados, ordem);
+    ordem[0]=idx;
+    visitados[idx] = 0;
+    return alg_bfs(g, visitados, ordem);
 }
 
-void alg_bfs(Grafo *g, int *visitados, int *ordem){
+int alg_bfs(Grafo *g, int *visitados, int *ordem){
     int i=0, j=1, nvl=0;
 
     do{
-        printf("%d %d\n", ordem[i], visitados[ordem[i]]);
-        nvl = nvl+1;
+        printf("\t%d %d\n", ordem[i], visitados[ordem[i]]);
+        if(visitados[ordem[i]]==0)
+            nvl = nvl+1;
 
-        for(Elem *elem = g->lista[ordem[i]];elem!=NULL;elem=elem->prox){
+        for(Elem *elem = g->lista[ordem[i++]];elem!=NULL;elem=elem->prox){
             if(visitados[elem->valor]<0){
-                ordem[j] = elem->valor;
+                ordem[j++] = elem->valor;
                 visitados[elem->valor] = nvl;
-                j+=1;
             }
         }
-
-        i+=1;
     }while(i<j);
 
+    return nvl;
 }
+
+int diametro(Grafo *g){
+    int diametro = 0;
+
+    for(int i=0;i<g->tam;i++){
+        int dist = bfs(g, i);
+        printf("i=%d dist=%d\n", i, dist);
+        if(diametro<dist)
+            diametro = dist;
+    }
+
+    return diametro;
+
+}
+
+
+
+
