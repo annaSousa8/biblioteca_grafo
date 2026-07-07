@@ -131,12 +131,12 @@ Grafo *criarGrafo(int numVert){
     return grafo;
 }
 
+
 Grafo *ler_arquivo(const char *nomeArquivo){
     FILE *arquivo;
     int numVert, vert1, vert2;
 
     arquivo = fopen(nomeArquivo, "r");
-
     if(arquivo == NULL){
         printf("Erro ao abrir arquivo!\n");
         return NULL;
@@ -152,3 +152,93 @@ Grafo *ler_arquivo(const char *nomeArquivo){
     return grafo;
 }
 
+
+static void alg_dfs_matriz(Grafo *grafo, int idx, int nivel, int *pai, int *niveis, char *visitados){
+    visitados[idx] = 'v';
+    niveis[idx] = nivel;
+
+    for(int j=0; j<grafo->numVert; j++){
+        if(grafo->matriz[idx][j] == 1 && visitados[j] == 'n'){
+            pai[j] = idx;
+            alg_dfs_matriz(grafo, j, nivel + 1, pai, niveis, visitados);
+        }
+    }
+}
+
+
+void dfs_matriz(Grafo *grafo, int inicio, const char *arquivoSaida){
+    FILE *saida = fopen(arquivoSaida, "w");
+    if(saida == NULL){
+        printf("Erro ao abrir arquivo.\n");
+        return;
+    }
+
+    int *pai = malloc(sizeof(int) * grafo->numVert);
+    int *niveis = malloc(sizeof(int) * grafo->numVert);
+    char *visitados = malloc(sizeof(char) * grafo->numVert);
+
+    for(int i=0; i<grafo->numVert; i++){
+        pai[i] = -1;
+        niveis[i] = -1;
+        visitados[i] = 'n';
+    }
+    alg_dfs_matriz(grafo, inicio, 0, pai, niveis,visitados);
+
+    fprintf(saida,"VERTICE PAI NIVEL\n");
+    for(int i=0; i<grafo->numVert; i++){
+        fprintf(saida, "%d %d %d\n", i+1, pai[i] == -1 ? 0 : pai[i]+1, niveis[i]);
+    }
+
+    fclose(saida);
+    free(pai);
+    free(niveis);
+    free(visitados);
+}
+
+
+void bfs_matriz(Grafo *grafo, int inicio, const char *arquivoSaida){
+    FILE *saida = fopen(arquivoSaida, "w");
+    if(saida == NULL){
+        printf("Erro ao abrir arquivo.\n");
+        return;
+    }
+
+    int *pai = malloc(sizeof(int) * grafo->numVert);
+    int *nivel = malloc(sizeof(int) * grafo->numVert);
+    char *visitados = malloc(sizeof(char) * grafo->numVert);
+    int fila[grafo->numVert];
+    int ini = 0;
+    int fim = 0;
+
+    for(int i=0; i<grafo->numVert; i++){
+        pai[i] = -1;
+        nivel[i] = -1;
+        visitados[i] = 'n';
+    }
+
+    visitados[inicio] = 'v';
+    nivel[inicio] = 0;
+    fila[fim++] = inicio;
+
+    while(ini < fim){
+        int atual = fila[ini++];
+        for(int j=0; j<grafo->numVert; j++){
+            if(grafo->matriz[atual][j] == 1 && visitados[j] == 'n'){
+                visitados[j] = 'v';
+                pai[j] = atual;
+                nivel[j] = nivel[atual] + 1;
+                fila[fim++] = j;
+            }
+        }
+    }
+
+    fprintf(saida, "VERTICE PAI NIVEL\n");
+    for(int i=0; i<grafo->numVert; i++){
+        fprintf(saida, "%d %d %d\n", i+1, pai[i] == -1 ? 0 : pai[i]+1, nivel[i]);
+    }
+
+    fclose(saida);
+    free(pai);
+    free(nivel);
+    free(visitados);
+}

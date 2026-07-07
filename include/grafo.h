@@ -25,3 +25,7 @@ float mediana(Grafo *grafo);
 Grafo *criarGrafo(int numVert);
 
 Grafo *ler_arquivo(const char *nomeArquivo);
+
+void dfs_matriz(Grafo *grafo, int inicio, const char *arquivoSaida);
+
+void bfs_matriz(Grafo *grafo, int inicio, const char *arquivoSaida);

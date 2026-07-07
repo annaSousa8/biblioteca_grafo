@@ -27,4 +27,8 @@ int main(){
 
     float med = mediana(grafo);
     printf("\nMediana dos graus: %.3f", med);
+
+    dfs_matriz(grafo, 0, "bin/saida_dfs.txt");
+    bfs_matriz(grafo, 0, "bin/saida_bfs.txt");
+
 }
