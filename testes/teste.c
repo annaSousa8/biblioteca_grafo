@@ -2,18 +2,12 @@
 #include "grafo.h"
 
 
-int main(){
-    Grafo *grafo = criarGrafo(6);
-    
-    exibir_grafo(grafo);
+int main(){    
+    Grafo *grafo = ler_arquivo("examples/grafo.txt");
+    if(grafo == NULL){
+        return 1;
+    }
 
-    add_elemento(grafo, 0 ,1);
-    add_elemento(grafo, 0 ,4);
-    add_elemento(grafo, 1 ,4);
-    add_elemento(grafo, 2 ,4);
-    add_elemento(grafo, 3 ,4);
-
-    printf("\n");
     exibir_grafo(grafo);
 
     int vert = numero_vertices(grafo);
@@ -33,9 +27,4 @@ int main(){
 
     float med = mediana(grafo);
     printf("\nMediana dos graus: %.3f", med);
-    
-    /*
-    lerArquivo(grafo, "examples/grafo.txt"); 
-    */
-
 }

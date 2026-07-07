@@ -118,7 +118,7 @@ float mediana(Grafo *grafo){
 
 
 Grafo *criarGrafo(int numVert){
-    Grafo *grafo = (Grafo *) malloc(sizeof(Grafo*));
+    Grafo *grafo = malloc(sizeof(Grafo));
 
     int **matriz = (int **) malloc(sizeof(int *) * numVert);
 
@@ -131,23 +131,24 @@ Grafo *criarGrafo(int numVert){
     return grafo;
 }
 
-/*
-void lerArquivo(Grafo *grafo, const char *nomeArquivo){
+Grafo *ler_arquivo(const char *nomeArquivo){
     FILE *arquivo;
     int numVert, vert1, vert2;
-   
-    if((arquivo=fopen(nomeArquivo, "r"))==NULL){
-        printf("\nErro ao abrir arquivo!");
-    } else {
-        fscanf(arquivo, "%d\n", &numVert);
-        //matriz = criarMatriz(numVert);
-        
-        while (!feof(arquivo))
-        {
-            fscanf(arquivo, "%d %d\n", &vert1, &vert2);
-            add_elemento(grafo, vert1-1, vert2-1);
-        }
+
+    arquivo = fopen(nomeArquivo, "r");
+
+    if(arquivo == NULL){
+        printf("Erro ao abrir arquivo!\n");
+        return NULL;
     }
+
+    fscanf(arquivo, "%d", &numVert);
+    Grafo *grafo = criarGrafo(numVert);
+    while(fscanf(arquivo, "%d %d", &vert1, &vert2) == 2){
+        add_elemento(grafo, vert1 - 1, vert2 - 1);
+    }
+
+    fclose(arquivo);
+    return grafo;
 }
-*/
 

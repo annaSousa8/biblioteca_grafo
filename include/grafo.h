@@ -24,4 +24,4 @@ float mediana(Grafo *grafo);
 
 Grafo *criarGrafo(int numVert);
 
-void lerArquivo(Grafo *grafo, const char *nomeArquivo);
+Grafo *ler_arquivo(const char *nomeArquivo);
