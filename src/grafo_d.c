@@ -201,21 +201,25 @@ void bfs(Grafo *g, int idx){
     for(int i=0;i<g->tam;i++)
         ordem[i]=0;
 
-    int i = 0;
+    int i = 0, j = 0;
 
-    alg_bfs(g, idx, 0, visitados, ordem, &i);
+    alg_bfs(g, idx, 0, visitados, ordem, &i, &j);
 }
 
-void alg_bfs(Grafo *g, int idx, int nvl, char *visitados, int *ordem, int *i){
+void alg_bfs(Grafo *g, int idx, int nvl, char *visitados, int *ordem, int *i, int *j){
 
-    printf("%d %d\n", idx, nvl);
-    visitados[idx] = 'v';
+    if(visitados[idx] == 'n'){
+        printf("%d %d\n", idx, nvl);
+        visitados[idx] = 'v';
+        nvl = nvl+1;
 
+        for(Elem *elem = g->lista[idx];elem!=NULL;elem=elem->prox)
+            if(visitados[elem->valor]=='n')
+                ordem[(*i)++] = elem->valor;
 
-    for(Elem *elem = g->lista[idx];elem!=NULL;elem=elem->prox){
-        if(visitados[elem->valor]=='n')
-            ordem[*i}
-
+        while((*j)<g->tam)
+            alg_bfs(g,ordem[(*j)++],nvl,visitados, ordem, i, j);
     }
+
 
 }
