@@ -13,6 +13,14 @@ void exibir_grafo(Grafo *grafo){
     }
 }
 
+void destruir_grafo(Grafo *grafo){
+    for(int i=0; i<grafo->numVert; i++){
+        free(grafo->matriz[i]);
+    }
+
+    free(grafo->matriz);
+    free(grafo);
+}
 
 void add_elemento(Grafo *grafo, int linha, int coluna){
     grafo->matriz[linha][coluna] = 1;

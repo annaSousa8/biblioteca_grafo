@@ -5,8 +5,9 @@ typedef struct Grafo
     int **matriz;
 } Grafo;
 
-
 void exibir_grafo(Grafo *grafo);
+
+void destruir_grafo(Grafo *grafo);
 
 void add_elemento(Grafo *grafo, int linha, int coluna);
 

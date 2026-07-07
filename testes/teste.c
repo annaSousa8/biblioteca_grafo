@@ -37,4 +37,6 @@ int main(){
     int diam = diametro(grafo);
     printf("\nDiametro: %d", diam);
 
+    destruir_grafo(grafo);
+
 }
