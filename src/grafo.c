@@ -278,3 +278,19 @@ int distancia(Grafo *grafo, int origem, int destino){
     return dist;
 }
 
+int diametro(Grafo *grafo){
+    int diam = 0;
+    int *nivel = (int *) malloc(sizeof(int) * grafo->numVert);
+
+    for(int i=0; i<grafo->numVert; i++){
+        bfs_nivel(grafo, i, nivel);
+        for(int j=0; j<grafo->numVert; j++){
+            if(nivel[j] > diam){
+                diam = nivel[j];
+            }
+        }
+    }
+
+    free(nivel);
+    return diam;
+}
