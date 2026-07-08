@@ -1,34 +1,36 @@
 #include "merge_sort.h"
+#include <stdlib.h>
 
-void merge_sort(int *lista, int inc, int fim){
-    int meio = (inc+fim)/2;
+void merge_sort(int *lista, int inicio, int fim){
 
-    if(inc!=fim){
-        merge_sort(lista, inc, meio);
+    if(inicio<fim){
+        int meio = (inicio+fim)/2;
+        merge_sort(lista, inicio, meio);
         merge_sort(lista, meio+1, fim);
-    }
-
-    merge(lista, inc, meio, meio+1, fim);
-
-}
-
-void merge(int *lista, int inc_1,int fim_1, int inc_2, int fim_2){
-    int i=inc_1, j=inc_2;
-    while(i<=fim_2&&j<=fim_2){
-        if(i==j){
-            j++;
-            continue;
-        }
-        if(lista[i]<lista[j]){
-            swap(&(lista[i]), &(lista[j]));
-            i++;
-        }else
-            i++;
+        merge(lista, inicio, meio, meio+1, fim);
     }
 }
 
-void swap(int *i, int *j){
-    int aux = *j;
-    *j=*i;
-    *i=aux;
+void merge(int *lista, int inicio1,int fim1, int inicio2, int fim2){
+    int tam = fim2 - inicio1 +1;
+    int *temp = (int *) malloc(sizeof(int)*tam);
+    int i=inicio1, j=inicio2, k=0;
+    while(i<=fim1 && j<=fim2){
+        if(lista[i]<=lista[j])
+            temp[k++] = lista[i++];
+        else
+            temp[k++] = lista[j++];
+    }
+
+    while(i<=fim1)
+        temp[k++] = lista[i++];
+
+    while(j<=fim1)
+        temp[k++] = lista[j++];
+
+    for(i=0;i<tam;i++)
+        lista[inicio1 + i] = temp[i];
+
+    free(temp);
+
 }

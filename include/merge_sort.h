@@ -1,5 +1,7 @@
-void merge_sort(int *lista, int inc, int fim);
+#ifndef MERGE_SORT_H
+#define MERGE_SORT_H
 
-void merge(int *lista, int inc_1,int fim_1, int inc_2, int fim_2);
+void merge_sort(int *lista, int inicio, int fim);
+void merge(int *lista, int inicio1,int fim1, int inicio2, int fim2);
 
-void swap(int *i, int *j);
+#endif // !MERGE_SORT_H
