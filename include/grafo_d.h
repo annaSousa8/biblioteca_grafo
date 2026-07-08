@@ -31,10 +31,15 @@ void grafo_limpar(GrafoLista *g);
 
 void lerArquivo(GrafoLista *grafo, const char *nomeArquivo);
 
+void dfs_arvore(GrafoLista *g, int inicio, const char *arquivoSaida);
+void bfs_arvore(GrafoLista *g, int inicio, const char *arquivoSaida);
+
 int grafo_dfs_buscar(GrafoLista *g, int inicio, int alvo);
 int grafo_bfs_buscar(GrafoLista *g, int inicio, int alco);
 
-void grafo_bfs_nivel(GrafoLista *g, int inicio, int *nivel);
+void grafo_bfs_distancia(GrafoLista *g, int inicio, int *dist);
+int vertice_mais_distante(GrafoLista *g, int *dist);
+int diametro_aproximado(GrafoLista *g);
 
 int grafo_distancia(GrafoLista *g, int origem, int destino);
 int grafo_diametro(GrafoLista *g);

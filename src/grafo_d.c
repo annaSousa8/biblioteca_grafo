@@ -4,6 +4,8 @@
 #include <stdlib.h>
 #include <stdio.h>
 
+#include <time.h>
+
 
 GrafoLista *criar_grafo(int tam) {
 	Elem **lista = (Elem **) malloc(sizeof(Elem *)*tam);
@@ -176,7 +178,92 @@ void lerArquivo(GrafoLista *g, const char *nomeArquivo){
     fclose(arquivo);
 }
 
+static void alg_dfs_arvore(GrafoLista *g, int idx, int nivel, int *pai, int *niveis, char *visitados){
+    visitados[idx] = 'v';
+    niveis[idx] = nivel;
 
+    for(Elem *elem = g->lista[idx]; elem != NULL; elem = elem->prox){
+        if(visitados[elem->valor] == 'n'){
+            pai[elem->valor] = idx;
+            alg_dfs_arvore(g, elem->valor, nivel + 1, pai, niveis, visitados);
+        }
+    }
+}
+void dfs_arvore(GrafoLista *g, int inicio, const char *arquivoSaida){
+    FILE *saida = fopen(arquivoSaida, "w");
+    if(saida == NULL){
+        printf("Erro ao abrir arquivo.\n");
+        return;
+    }
+
+    int *pai = malloc(sizeof(int) * g->tam);
+    int *niveis = malloc(sizeof(int) * g->tam);
+    char *visitados = malloc(sizeof(char) * g->tam);
+
+    for(int i=0; i<g->tam; i++){
+        pai[i] = -1;
+        niveis[i] = -1;
+        visitados[i] = 'n';
+    }
+
+    alg_dfs_arvore(g, inicio, 0, pai, niveis, visitados);
+
+    fprintf(saida, "VERTICE PAI NIVEL\n");
+    for(int i=0; i<g->tam; i++){
+        fprintf(saida, "%d %d %d\n", i+1, pai[i] == -1 ? 0 : pai[i]+1, niveis[i]);
+    }
+
+    fclose(saida);
+    free(pai);
+    free(niveis);
+    free(visitados);
+}
+void bfs_arvore(GrafoLista *g, int inicio, const char *arquivoSaida){
+    FILE *saida = fopen(arquivoSaida, "w");
+    if(saida == NULL){
+        printf("Erro ao abrir arquivo.\n");
+        return;
+    }
+
+    int *pai = malloc(sizeof(int) * g->tam);
+    int *nivel = malloc(sizeof(int) * g->tam);
+    char *visitados = malloc(sizeof(char) * g->tam);
+    int *fila = malloc(sizeof(int) * g->tam);
+    int ini = 0, fim = 0;
+
+    for(int i=0; i<g->tam; i++){
+        pai[i] = -1;
+        nivel[i] = -1;
+        visitados[i] = 'n';
+    }
+
+    visitados[inicio] = 'v';
+    nivel[inicio] = 0;
+    fila[fim++] = inicio;
+
+    while(ini < fim){
+        int atual = fila[ini++];
+        for(Elem *elem = g->lista[atual]; elem != NULL; elem = elem->prox){
+            if(visitados[elem->valor] == 'n'){
+                visitados[elem->valor] = 'v';
+                pai[elem->valor] = atual;
+                nivel[elem->valor] = nivel[atual] + 1;
+                fila[fim++] = elem->valor;
+            }
+        }
+    }
+
+    fprintf(saida, "VERTICE PAI NIVEL\n");
+    for(int i=0; i<g->tam; i++){
+        fprintf(saida, "%d %d %d\n", i+1, pai[i] == -1 ? 0 : pai[i]+1, nivel[i]);
+    }
+
+    fclose(saida);
+    free(pai);
+    free(nivel);
+    free(visitados);
+    free(fila);
+}
 int alg_dfs_buscar(GrafoLista *g, int idx, int alvo, char *visitados){
     if(idx == alvo)
         return 1;
@@ -195,7 +282,10 @@ int grafo_dfs_buscar(GrafoLista *g, int inicio, int alvo){
     for(int i=0;i<g->tam;i++)
         visitados[i]='n';
 
+    clock_t inicio_t = clock();
     int achou = alg_dfs_buscar(g, inicio, alvo, visitados);
+    clock_t fim_t = clock();
+    printf("Tempo: %f s\n", (double)(fim_t-inicio_t)/CLOCKS_PER_SEC);
 
     free(visitados);
     return achou;
@@ -244,6 +334,7 @@ int grafo_bfs_buscar(GrafoLista *g, int inicio, int alvo){
     fila[fim++] = inicio;
 
     int achou = 0;
+    clock_t inicio_t = clock();
     while(ini < fim && !achou){
         int atual = fila[ini++];
         for(Elem *elem = g->lista[atual]; elem!=NULL; elem=elem->prox){
@@ -257,10 +348,80 @@ int grafo_bfs_buscar(GrafoLista *g, int inicio, int alvo){
             }
         }
     }
+    clock_t fim_t = clock();
+    printf("Tempo: %f s\n", (double)(fim_t-inicio_t)/CLOCKS_PER_SEC);
 
     free(visitados);
     free(fila);
     return achou;
+}
+
+void grafo_bfs_distancia(GrafoLista *g, int inicio, int *dist){
+    int *fila = (int *) malloc(sizeof(int) * g->tam);
+    if(fila == NULL)
+        return;
+
+    int ini = 0, fim = 0;
+
+    for(int i=0; i<g->tam; i++)
+        dist[i] = -1;
+
+    fila[fim++] = inicio;
+    dist[inicio] = 0;
+
+    clock_t inicio_t = clock();
+    while(ini < fim){
+        int atual = fila[ini++];
+
+        for(Elem *elem = g->lista[atual]; elem!=NULL; elem=elem->prox){
+            if(dist[elem->valor] == -1){
+                dist[elem->valor] = dist[atual] + 1;
+                fila[fim++] = elem->valor;
+            }
+        }
+    }
+    clock_t fim_t = clock();
+    printf("Tempo: %f s\n", (double)(fim_t-inicio_t)/CLOCKS_PER_SEC);
+
+    free(fila);
+}
+int vertice_mais_distante(GrafoLista *g, int *dist) {
+    int maior = -1;
+    int indice = 0;
+
+    for (int i = 0; i < g->tam; i++) {
+        if (dist[i] > maior) {
+            maior = dist[i];
+            indice = i;
+        }
+    }
+
+    return indice;
+}
+int diametro_aproximado(GrafoLista *g) {
+
+    int *dist = (int *) malloc(sizeof(int) * g->tam);
+    if(dist == NULL)
+        return -1;
+
+    // primeira BFS
+    grafo_bfs_distancia(g, 0, dist);
+
+    int u = vertice_mais_distante(g, dist);
+
+    // segunda BFS
+    grafo_bfs_distancia(g, u, dist);
+
+    int v = vertice_mais_distante(g, dist);
+
+    printf("u = %d\n", u);
+    printf("v = %d\n", v);
+
+    int diam = dist[v];
+
+    free(dist);
+
+    return diam;
 }
 
 
@@ -271,7 +432,6 @@ int grafo_distancia(GrafoLista *g, int origem, int destino){
     free(nivel);
     return dist;
 }
-
 int grafo_diametro(GrafoLista *g){
     int diam = 0;
     int *nivel = (int *) malloc(sizeof(int) * g->tam);

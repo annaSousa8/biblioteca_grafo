@@ -101,11 +101,26 @@ float gg_mediana(GrafoGeral *g){
     return grafo_grau_mediano(g->grafoLista);
 }
 
+void gg_dfs_arvore(GrafoGeral *g, int inicio, const char *arquivoSaida){
+    if(g->tipo == MATRIZ)
+        dfs_matriz(g->grafoMatriz, inicio, arquivoSaida);
+    else
+        dfs_arvore(g->grafoLista, inicio, arquivoSaida);
+}
+
+void gg_bfs_arvore(GrafoGeral *g, int inicio, const char *arquivoSaida){
+    if(g->tipo == MATRIZ)
+        bfs_matriz(g->grafoMatriz, inicio, arquivoSaida);
+    else
+        bfs_arvore(g->grafoLista, inicio, arquivoSaida);
+}
+
 int gg_dfs_buscar(GrafoGeral *g, int inicio, int alvo){
     if(g->tipo == MATRIZ)
         return dfs_buscar(g->grafoMatriz, inicio, alvo);
     return grafo_dfs_buscar(g->grafoLista, inicio, alvo);
 }
+
 
 int gg_bfs_buscar(GrafoGeral *g, int inicio, int alvo){
     if(g->tipo == MATRIZ)
@@ -123,6 +138,12 @@ int gg_diametro(GrafoGeral *g){
     if(g->tipo == MATRIZ)
         return diametro(g->grafoMatriz);
     return grafo_diametro(g->grafoLista);
+}
+
+int gg_diametro_aproximado(GrafoGeral *g){
+    if(g->tipo == MATRIZ)
+        return -1;
+    return diametro_aproximado(g->grafoLista);
 }
 
 Componentes *gg_componentes_conexos(GrafoGeral *g){

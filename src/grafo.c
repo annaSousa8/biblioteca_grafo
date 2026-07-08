@@ -3,6 +3,7 @@
 #include "merge_sort.h"
 #include <stdlib.h>
 
+#include <time.h>
 
 GrafoMatriz *criarGrafo(int numVert){
     GrafoMatriz *grafo = malloc(sizeof(GrafoMatriz));
@@ -270,7 +271,11 @@ int dfs_buscar(GrafoMatriz *grafo, int inicio, int alvo){
     for(int i=0; i<grafo->numVert; i++)
         visitados[i] = 'n';
 
+
+    clock_t inicio_t = clock();
     int achou = alg_dfs_buscar(grafo, inicio, alvo, visitados);
+    clock_t fim_t = clock();
+    printf("Tempo: %f s\n", (double)(fim_t-inicio_t)/CLOCKS_PER_SEC);
 
 
     free(visitados);
@@ -292,6 +297,7 @@ int bfs_buscar(GrafoMatriz *grafo, int inicio, int alvo){
     fila[fim++] = inicio;
 
     int achou = 0;
+    clock_t inicio_t = clock();
     while(ini < fim && !achou){
         int atual = fila[ini++];
         for(int j=0; j<grafo->numVert; j++){
@@ -305,6 +311,8 @@ int bfs_buscar(GrafoMatriz *grafo, int inicio, int alvo){
             }
         }
     }
+    clock_t fim_t = clock();
+    printf("Tempo: %f s\n", (double)(fim_t-inicio_t)/CLOCKS_PER_SEC);
 
     free(visitados);
     free(fila);
@@ -407,6 +415,8 @@ Componentes *componentes_conexos(GrafoMatriz *grafo){
 
     return comp;
 }
+
+
 
 
 void gerar_relatorio(GrafoMatriz *grafo, const char *arquivoSaida){

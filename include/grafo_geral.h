@@ -36,11 +36,15 @@ int gg_grau_maior(GrafoGeral *g);
 float gg_grau_medio(GrafoGeral *g);
 float gg_mediana(GrafoGeral *g);
 
+void gg_dfs_arvore(GrafoGeral *g, int inicio, const char *arquivoSaida);
+void gg_bfs_arvore(GrafoGeral *g, int inicio, const char *arquivoSaida);
+
 int gg_dfs_buscar(GrafoGeral *g, int inicio, int alvo);
 int gg_bfs_buscar(GrafoGeral *g, int inicio, int alvo);
 
 int gg_distancia(GrafoGeral *g, int origem, int destino);
 int gg_diametro(GrafoGeral *g);
+int gg_diametro_aproximado(GrafoGeral *g);
 
 Componentes *gg_componentes_conexos(GrafoGeral *g);
 
