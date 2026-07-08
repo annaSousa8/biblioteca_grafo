@@ -5,23 +5,23 @@
 #include <stdio.h>
 
 
-Grafo * criar_grafo(int tam) {
+GrafoLista *criar_grafo(int tam) {
 	Elem **lista = (Elem **) malloc(sizeof(Elem *)*tam);
 
 	for(int i=0;i<tam;i++)
 		lista[i] = NULL;
 
-	Grafo *g = (Grafo *) malloc(sizeof(Grafo));
+	GrafoLista *g = (GrafoLista *) malloc(sizeof(GrafoLista));
 
 	g->lista = lista;
 	g->tam = tam;
 
 	return g;
 }
-void destroir( Grafo *g ){
+void destroir( GrafoLista *g ){
     Elem *atual, *prox;
 
-    for(int i=0; i<5; i++){
+    for(int i=0; i<g->tam; i++){
         atual=g->lista[i];
         while(atual!=NULL){
             prox=atual->prox;
@@ -29,10 +29,12 @@ void destroir( Grafo *g ){
             atual=prox;
         }
     }
+    free(g->lista);
     free(g);
 }
 
-int grafo_adicionar_no(Grafo *g, int n1, int n2){
+
+int grafo_adicionar_no(GrafoLista *g, int n1, int n2){
 
 	if(!((n1-1)>=0&&(n1-1)<g->tam)||!((n2-1)>=0&&(n2-1)<g->tam))
 		return 0;
@@ -56,10 +58,8 @@ int grafo_adicionar_no(Grafo *g, int n1, int n2){
 	return 1;
 }
 
-int grafo_num_arestas( Grafo *g){
-    return g->tam;
-}
-int grafo_num_vertices( Grafo *g){
+
+int grafo_num_arestas( GrafoLista *g){
     int totalVert=0;
     Elem *aux;
 
@@ -68,8 +68,10 @@ int grafo_num_vertices( Grafo *g){
 
     return totalVert;
 }
-
-int grafo_grau_min( Grafo *g){
+int grafo_num_vertices( GrafoLista *g){
+    return g->tam;
+}
+int grafo_grau_min( GrafoLista *g){
     int grau = -1;
     Elem *aux;
 
@@ -82,7 +84,7 @@ int grafo_grau_min( Grafo *g){
 
     return grau;
 }
-int grafo_grau_max( Grafo *g){
+int grafo_grau_max( GrafoLista *g){
     int grau = -1;
     Elem *aux;
 
@@ -95,7 +97,7 @@ int grafo_grau_max( Grafo *g){
 
     return grau;
 }
-float grafo_grau_medio(Grafo *g){
+float grafo_grau_medio(GrafoLista *g){
 	int graus[g->tam];
 	int total=0;
 	Elem *aux;
@@ -110,7 +112,7 @@ float grafo_grau_medio(Grafo *g){
 
 	return total/(float)g->tam;
 }
-float grafo_grau_mediano(Grafo *g){
+float grafo_grau_mediano(GrafoLista *g){
 	int graus[g->tam];
 	Elem *aux;
 	for(int i=0;i<g->tam;i++){
@@ -122,14 +124,15 @@ float grafo_grau_mediano(Grafo *g){
 
     merge_sort(graus, 0, g->tam-1);
 
-    if(g->tam/2>0){
+    if(g->tam/2 != 0){
         return graus[g->tam/2];
     }
 
-    return ((graus[g->tam/2]+graus[(g->tam/2)-1])/2);
+    return ((graus[g->tam/2]+graus[(g->tam/2)-1])/2.0);
 }
 
-void grafo_mostrar(Grafo *g){
+
+void grafo_mostrar(GrafoLista *g){
 	Elem *aux;
 	for(int i=0;i<g->tam;i++){
 		printf("No %d\n\t",i);
@@ -140,10 +143,10 @@ void grafo_mostrar(Grafo *g){
 		printf("\n");
 	}
 }
-void grafo_limpar(Grafo *g){
+void grafo_limpar(GrafoLista *g){
     Elem *atual, *prox;
 
-    for(int i=0; i<5; i++){
+    for(int i=0; i<g->tam; i++){
         atual=g->lista[i];
         while(atual!=NULL){
             prox=atual->prox;
@@ -154,91 +157,220 @@ void grafo_limpar(Grafo *g){
     }
 }
 
-void lerArquivo(Grafo *g, const char *nomeArquivo){
+
+void lerArquivo(GrafoLista *g, const char *nomeArquivo){
     FILE *arquivo;
     int numVert, vert1, vert2;
 
 
     if((arquivo=fopen(nomeArquivo, "r"))==NULL){
         printf("\nErro ao abrir arquivo!");
-    } else {
-        fscanf(arquivo, "%d\n", &numVert);
-
-        while (!feof(arquivo))
-        {
-            fscanf(arquivo, "%d %d\n", &vert1, &vert2);
-            grafo_adicionar_no(g, vert1, vert2);
-        }
+        return;
     }
+    fscanf(arquivo, "%d\n", &numVert);
+
+    while (fscanf(arquivo, "%d %d\n", &vert1, &vert2) == 2){
+        grafo_adicionar_no(g, vert1, vert2);
+    }
+
+    fclose(arquivo);
 }
 
-void dfs(Grafo *g, int idx){
+
+int alg_dfs_buscar(GrafoLista *g, int idx, int alvo, char *visitados){
+    if(idx == alvo)
+        return 1;
+
+    visitados[idx] = 'v';
+
+    for(Elem *elem = g->lista[idx]; elem!=NULL; elem=elem->prox)
+        if(visitados[elem->valor]=='n')
+            if(alg_dfs_buscar(g, elem->valor, alvo, visitados))
+                return 1;
+
+    return 0;
+}
+int grafo_dfs_buscar(GrafoLista *g, int inicio, int alvo){
     char *visitados = (char*) malloc(sizeof(char)*g->tam);
     for(int i=0;i<g->tam;i++)
         visitados[i]='n';
-    alg_dfs(g, idx, 0, visitados);
+
+    int achou = alg_dfs_buscar(g, inicio, alvo, visitados);
+
+    free(visitados);
+    return achou;
 }
+void grafo_bfs_nivel(GrafoLista *g, int inicio, int *nivel){
+    char *visitados = (char *) malloc(sizeof(char) * g->tam);
+    int *fila = (int *) malloc(sizeof(int) * g->tam);
+    int ini = 0, fim = 0;
 
-void alg_dfs(Grafo *g, int idx, int nvl, char *visitados){
-
-    printf("%d %d\n", idx, nvl);
-    visitados[idx] = 'v';
-
-
-    for(Elem *elem = g->lista[idx];elem!=NULL;elem=elem->prox){
-        if(visitados[elem->valor]=='n')
-            alg_dfs(g,elem->valor, nvl+1, visitados);
+    for(int i=0; i<g->tam; i++){
+        visitados[i] = 'n';
+        nivel[i] = -1;
     }
 
-}
+    visitados[inicio] = 'v';
+    nivel[inicio] = 0;
+    fila[fim++] = inicio;
 
-int bfs(Grafo *g, int idx){
-    int *visitados = (int*) malloc(sizeof(int)*g->tam);
-    for(int i=0;i<g->tam;i++)
-        visitados[i]=-1;
-
-    int *ordem = (int *) malloc(sizeof(int)*g->tam);
-    for(int i=0;i<g->tam;i++)
-        ordem[i]=0;
-
-    ordem[0]=idx;
-    visitados[idx] = 0;
-    return alg_bfs(g, visitados, ordem);
-}
-
-int alg_bfs(Grafo *g, int *visitados, int *ordem){
-    int i=0, j=1, nvl=0;
-
-    do{
-        printf("\t%d %d\n", ordem[i], visitados[ordem[i]]);
-        if(visitados[ordem[i]]==0)
-            nvl = nvl+1;
-
-        for(Elem *elem = g->lista[ordem[i++]];elem!=NULL;elem=elem->prox){
-            if(visitados[elem->valor]<0){
-                ordem[j++] = elem->valor;
-                visitados[elem->valor] = nvl;
+    while(ini < fim){
+        int atual = fila[ini++];
+        for(Elem *elem = g->lista[atual]; elem!=NULL; elem=elem->prox){
+            if(visitados[elem->valor] == 'n'){
+                visitados[elem->valor] = 'v';
+                nivel[elem->valor] = nivel[atual] + 1;
+                fila[fim++] = elem->valor;
             }
         }
-    }while(i<j);
-
-    return nvl;
-}
-
-int diametro(Grafo *g){
-    int diametro = 0;
-
-    for(int i=0;i<g->tam;i++){
-        int dist = bfs(g, i);
-        printf("i=%d dist=%d\n", i, dist);
-        if(diametro<dist)
-            diametro = dist;
     }
 
-    return diametro;
+    free(visitados);
+    free(fila);
+}
+int grafo_bfs_buscar(GrafoLista *g, int inicio, int alvo){
+    if(inicio == alvo){
+        return 1;
+    }
 
+    char *visitados = (char *) malloc(sizeof(char) * g->tam);
+    int *fila = (int *) malloc(sizeof(int) * g->tam);
+    int ini = 0, fim = 0;
+
+    for(int i=0; i<g->tam; i++)
+        visitados[i] = 'n';
+
+    visitados[inicio] = 'v';
+    fila[fim++] = inicio;
+
+    int achou = 0;
+    while(ini < fim && !achou){
+        int atual = fila[ini++];
+        for(Elem *elem = g->lista[atual]; elem!=NULL; elem=elem->prox){
+            if(visitados[elem->valor] == 'n'){
+                if(elem->valor == alvo){
+                    achou = 1;
+                    break;
+                }
+                visitados[elem->valor] = 'v';
+                fila[fim++] = elem->valor;
+            }
+        }
+    }
+
+    free(visitados);
+    free(fila);
+    return achou;
 }
 
 
+int grafo_distancia(GrafoLista *g, int origem, int destino){
+    int *nivel = (int *) malloc(sizeof(int) * g->tam);
+    grafo_bfs_nivel(g, origem, nivel);
+    int dist = nivel[destino];
+    free(nivel);
+    return dist;
+}
+
+int grafo_diametro(GrafoLista *g){
+    int diam = 0;
+    int *nivel = (int *) malloc(sizeof(int) * g->tam);
+
+    for(int i=0;i<g->tam;i++){
+        grafo_bfs_nivel(g, i, nivel);
+        for(int j=0; j<g->tam; j++)
+            if(nivel[j] > diam)
+                diam = nivel[j];
+    }
+
+    free(nivel);
+    return diam;
+}
 
 
+Componentes *grafo_componentes_conexos(GrafoLista *g){
+    char *visitado = (char *) malloc(sizeof(char) * g->tam);
+    for(int i=0; i<g->tam; i++){
+        visitado[i] = 'n';
+    }
+
+    int *tamanhos = (int *) malloc(sizeof(int) * g->tam);
+    int **vertices = (int **) malloc(sizeof(int *) * g->tam);
+    int numComp = 0;
+
+    int *fila = (int *) malloc(sizeof(int) * g->tam);
+
+    for(int i=0; i<g->tam; i++){
+        if(visitado[i] == 'n'){
+            int ini = 0, fim = 0;
+            fila[fim++] = i;
+            visitado[i] = 'v';
+
+            int *compVertices = (int *) malloc(sizeof(int) * g->tam);
+            int tamComp = 0;
+
+            while(ini < fim){
+                int atual = fila[ini++];
+                compVertices[tamComp++] = atual + 1; /* saida 1-indexada */
+
+                for(Elem *elem = g->lista[atual]; elem!=NULL; elem=elem->prox){
+                    if(visitado[elem->valor] == 'n'){
+                        visitado[elem->valor] = 'v';
+                        fila[fim++] = elem->valor;
+                    }
+                }
+            }
+
+            compVertices = (int *) realloc(compVertices, sizeof(int) * tamComp);
+            vertices[numComp] = compVertices;
+            tamanhos[numComp] = tamComp;
+            numComp++;
+        }
+    }
+
+    free(fila);
+    free(visitado);
+
+    for(int i=0; i<numComp-1; i++){
+        int maior = i;
+        for(int j=i+1; j<numComp; j++){
+            if(tamanhos[j] > tamanhos[maior]){
+                maior = j;
+            }
+        }
+        if(maior != i){
+            int tAux = tamanhos[i];
+            tamanhos[i] = tamanhos[maior];
+            tamanhos[maior] = tAux;
+
+            int *vAux = vertices[i];
+            vertices[i] = vertices[maior];
+            vertices[maior] = vAux;
+        }
+    }
+
+    Componentes *comp = (Componentes *) malloc(sizeof(Componentes));
+    comp->numComponentes = numComp;
+    comp->tamanhos = (int *) realloc(tamanhos, sizeof(int) * numComp);
+    comp->vertices = (int **) realloc(vertices, sizeof(int *) * numComp);
+
+    return comp;
+}
+
+
+void grafo_gerar_relatorio(GrafoLista *g, const char *arquivoSaida){
+    FILE *saida = fopen(arquivoSaida, "w");
+    if(saida == NULL){
+        printf("Erro ao abrir arquivo.\n");
+        return;
+    }
+
+    fprintf(saida, "Numero de vertices: %d\n", grafo_num_vertices(g));
+    fprintf(saida, "Numero de arestas: %d\n", grafo_num_arestas(g));
+    fprintf(saida, "Grau minimo: %d\n", grafo_grau_min(g));
+    fprintf(saida, "Grau maximo: %d\n", grafo_grau_max(g));
+    fprintf(saida, "Grau medio: %.2f\n", grafo_grau_medio(g));
+    fprintf(saida, "Mediana de grau: %.2f\n", grafo_grau_mediano(g));
+
+    fclose(saida);
+}

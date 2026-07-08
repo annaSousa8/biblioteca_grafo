@@ -1,36 +1,40 @@
+#ifndef GRAFO_H
+#define GRAFO_H
 
-typedef struct Grafo
+#include "componentes.h"
+
+typedef struct grafomatriz
 {
     int numVert;
     int **matriz;
-} Grafo;
+} GrafoMatriz;
 
-void exibir_grafo(Grafo *grafo);
+GrafoMatriz *criarGrafo(int numVert);
+void exibir_grafo(GrafoMatriz *grafo);
+void destruir_grafo(GrafoMatriz *grafo);
+void add_elemento(GrafoMatriz *grafo, int linha, int coluna);
 
-void destruir_grafo(Grafo *grafo);
+int numero_vertices(GrafoMatriz *grafo);
+int numero_arestas(GrafoMatriz *grafo);
+int grau_maior(GrafoMatriz *grafo);
+int grau_menor(GrafoMatriz *grafo);
+float grau_medio(GrafoMatriz *grafo);
+float mediana(GrafoMatriz *grafo);
 
-void add_elemento(Grafo *grafo, int linha, int coluna);
+GrafoMatriz *ler_arquivo(const char *nomeArquivo);
 
-int numero_vertices(Grafo *grafo);
+void dfs_matriz(GrafoMatriz *grafo, int inicio, const char *arquivoSaida);
+void bfs_matriz(GrafoMatriz *grafo, int inicio, const char *arquivoSaida);
+void bfs_nivel(GrafoMatriz *grafo, int inicio, int *nivel);
 
-int numero_arestas(Grafo *grafo);
+int dfs_buscar(GrafoMatriz *grafo, int inicio, int alvo);
+int bfs_buscar(GrafoMatriz *grafo, int inicio, int alvo);
 
-int grau_maior(Grafo *grafo);
+int distancia(GrafoMatriz *grafo, int origem, int destino);
+int diametro(GrafoMatriz *grafo);
 
-int grau_menor(Grafo *grafo);
+Componentes *componentes_conexos(GrafoMatriz *grafo);
 
-float grau_medio(Grafo *grafo);
+void gerar_relatorio(GrafoMatriz *grafo, const char *arquivoSaida);
 
-float mediana(Grafo *grafo);
-
-Grafo *criarGrafo(int numVert);
-
-Grafo *ler_arquivo(const char *nomeArquivo);
-
-void dfs_matriz(Grafo *grafo, int inicio, const char *arquivoSaida);
-
-void bfs_matriz(Grafo *grafo, int inicio, const char *arquivoSaida);
-
-int distancia(Grafo *grafo, int origem, int destino);
-
-int diametro(Grafo *grafo);
+#endif // !GRAFO_H

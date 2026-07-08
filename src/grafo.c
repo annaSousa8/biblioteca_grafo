@@ -2,9 +2,22 @@
 #include "grafo.h"
 #include "merge_sort.h"
 #include <stdlib.h>
- 
 
-void exibir_grafo(Grafo *grafo){
+
+GrafoMatriz *criarGrafo(int numVert){
+    GrafoMatriz *grafo = malloc(sizeof(GrafoMatriz));
+
+    int **matriz = (int **) malloc(sizeof(int *) * numVert);
+
+    for(int i = 0; i < numVert; i++){
+        matriz[i] = (int *) calloc(numVert, sizeof(int));
+    }
+
+    grafo->numVert = numVert;
+    grafo->matriz = matriz;
+    return grafo;
+}
+void exibir_grafo(GrafoMatriz *grafo){
     for(int i=0; i<grafo->numVert; i++){
         for(int j=0; j<grafo->numVert; j++){
             printf(" %d ", (grafo->matriz)[i][j]);
@@ -12,47 +25,40 @@ void exibir_grafo(Grafo *grafo){
         printf("\n");
     }
 }
-
-void destruir_grafo(Grafo *grafo){
-    for(int i=0; i<grafo->numVert; i++){
+void destruir_grafo(GrafoMatriz *grafo){
+    for(int i=0; i<grafo->numVert; i++)
         free(grafo->matriz[i]);
-    }
 
     free(grafo->matriz);
     free(grafo);
 }
-
-void add_elemento(Grafo *grafo, int linha, int coluna){
+void add_elemento(GrafoMatriz *grafo, int linha, int coluna){
     grafo->matriz[linha][coluna] = 1;
     grafo->matriz[coluna][linha] = 1;
 }
 
 
-int numero_vertices(Grafo *grafo){
+int numero_vertices(GrafoMatriz *grafo){
     return grafo->numVert;
 }
-
-
-int numero_arestas(Grafo *grafo){
+int numero_arestas(GrafoMatriz *grafo){
     int cont  = 0, dp = 0, num_arestas = 0;
     for(int i=0; i<grafo->numVert; i++){
         for(int j=0; j<grafo->numVert; j++){
-            if(grafo->matriz[i][j] == 1 && i != j){
+            if(grafo->matriz[i][j] == 1 && i != j)
                 cont++;
-            }
-            if(i == j && grafo->matriz[i][j]==1){
+
+            if(i == j && grafo->matriz[i][j]==1)
                 dp++;
-            }
         }
     }
-    //printf("% d, diagonal: %d", cont, dp);
     num_arestas = (cont/2)+dp;
     return(num_arestas);
 }
 
 
-int grau_maior(Grafo *grafo){
-    int aux, maior = 0, pos_maior = 0;
+int grau_maior(GrafoMatriz *grafo){
+    int aux, maior = 0;
     for(int i=0; i<grafo->numVert; i++){
         aux = 0;
         for(int j=0; j<grafo->numVert; j++){
@@ -62,15 +68,12 @@ int grau_maior(Grafo *grafo){
         }
         if(aux>maior){
             maior = aux;
-            pos_maior = i;
         }
     }
     return(maior);
 }
-
-
-int grau_menor(Grafo *grafo){
-    int aux, menor = grafo->numVert, pos_menor = 0;
+int grau_menor(GrafoMatriz *grafo){
+    int aux, menor = grafo->numVert;
     for(int i=0; i<grafo->numVert; i++){
         aux = 0;
         for(int j=0; j<grafo->numVert; j++){
@@ -80,14 +83,11 @@ int grau_menor(Grafo *grafo){
         }
         if(aux<menor){
             menor = aux;
-            pos_menor = i;
         }
     }
     return(menor);
 }
-
-
-float grau_medio(Grafo *grafo){
+float grau_medio(GrafoMatriz *grafo){
     float cont=0, grau=0;
     for(int i=0; i<grafo->numVert; i++){
         for(int j=0; j<grafo->numVert; j++){
@@ -101,20 +101,18 @@ float grau_medio(Grafo *grafo){
 }
 
 
-float mediana(Grafo *grafo){
+float mediana(GrafoMatriz *grafo){
     int graus[grafo->numVert];
-    int aux;
 
     for(int i=0; i<grafo->numVert; i++){
         graus[i] = 0;
         for(int j=0; j<grafo->numVert; j++){
-            if(grafo->matriz[i][j] == 1){
+            if(grafo->matriz[i][j] == 1)
                 graus[i]++;
-            }
         }
     }
 
-    merge_sort(graus, 0, grafo->numVert);
+    merge_sort(graus, 0, grafo->numVert - 1);
 
     if(grafo->numVert % 2 != 0){
         return(graus[grafo->numVert/2]);
@@ -125,22 +123,7 @@ float mediana(Grafo *grafo){
 }
 
 
-Grafo *criarGrafo(int numVert){
-    Grafo *grafo = malloc(sizeof(Grafo));
-
-    int **matriz = (int **) malloc(sizeof(int *) * numVert);
-
-    for(int i = 0; i < numVert; i++){
-        matriz[i] = (int *) calloc(numVert, sizeof(int));
-    }
-
-    grafo->numVert = numVert;
-    grafo->matriz = matriz;
-    return grafo;
-}
-
-
-Grafo *ler_arquivo(const char *nomeArquivo){
+GrafoMatriz *ler_arquivo(const char *nomeArquivo){
     FILE *arquivo;
     int numVert, vert1, vert2;
 
@@ -151,7 +134,7 @@ Grafo *ler_arquivo(const char *nomeArquivo){
     }
 
     fscanf(arquivo, "%d", &numVert);
-    Grafo *grafo = criarGrafo(numVert);
+    GrafoMatriz *grafo = criarGrafo(numVert);
     while(fscanf(arquivo, "%d %d", &vert1, &vert2) == 2){
         add_elemento(grafo, vert1 - 1, vert2 - 1);
     }
@@ -161,7 +144,7 @@ Grafo *ler_arquivo(const char *nomeArquivo){
 }
 
 
-static void alg_dfs_matriz(Grafo *grafo, int idx, int nivel, int *pai, int *niveis, char *visitados){
+static void alg_dfs_matriz(GrafoMatriz *grafo, int idx, int nivel, int *pai, int *niveis, char *visitados){
     visitados[idx] = 'v';
     niveis[idx] = nivel;
 
@@ -172,9 +155,7 @@ static void alg_dfs_matriz(Grafo *grafo, int idx, int nivel, int *pai, int *nive
         }
     }
 }
-
-
-void dfs_matriz(Grafo *grafo, int inicio, const char *arquivoSaida){
+void dfs_matriz(GrafoMatriz *grafo, int inicio, const char *arquivoSaida){
     FILE *saida = fopen(arquivoSaida, "w");
     if(saida == NULL){
         printf("Erro ao abrir arquivo.\n");
@@ -202,9 +183,7 @@ void dfs_matriz(Grafo *grafo, int inicio, const char *arquivoSaida){
     free(niveis);
     free(visitados);
 }
-
-
-void bfs_matriz(Grafo *grafo, int inicio, const char *arquivoSaida){
+void bfs_matriz(GrafoMatriz *grafo, int inicio, const char *arquivoSaida){
     FILE *saida = fopen(arquivoSaida, "w");
     if(saida == NULL){
         printf("Erro ao abrir arquivo.\n");
@@ -249,9 +228,7 @@ void bfs_matriz(Grafo *grafo, int inicio, const char *arquivoSaida){
     free(nivel);
     free(visitados);
 }
-
-
-void bfs_nivel(Grafo *grafo, int inicio, int *nivel){
+void bfs_nivel(GrafoMatriz *grafo, int inicio, int *nivel){
     char *visitados = (char *) malloc(sizeof(char)*grafo->numVert);
     int fila[grafo->numVert];
     int ini = 0, fim = 0;
@@ -276,9 +253,66 @@ void bfs_nivel(Grafo *grafo, int inicio, int *nivel){
     }
     free(visitados);
 }
+static int alg_dfs_buscar(GrafoMatriz *grafo, int idx, int alvo, char *visitados){
+    if(idx == alvo)
+        return 1;
+    visitados[idx] = 'v';
+
+    for(int j=0; j<grafo->numVert; j++)
+        if(grafo->matriz[idx][j] == 1 && visitados[j] == 'n')
+            if(alg_dfs_buscar(grafo, j, alvo, visitados))
+                return 1;
+
+    return 0;
+}
+int dfs_buscar(GrafoMatriz *grafo, int inicio, int alvo){
+    char *visitados = malloc(sizeof(char) * grafo->numVert);
+    for(int i=0; i<grafo->numVert; i++)
+        visitados[i] = 'n';
+
+    int achou = alg_dfs_buscar(grafo, inicio, alvo, visitados);
 
 
-int distancia(Grafo *grafo, int origem, int destino){
+    free(visitados);
+    return achou;
+}
+int bfs_buscar(GrafoMatriz *grafo, int inicio, int alvo){
+    if(inicio == alvo){
+        return 1;
+    }
+
+    char *visitados = malloc(sizeof(char) * grafo->numVert);
+    int *fila = malloc(sizeof(int) * grafo->numVert);
+    int ini = 0, fim = 0;
+
+    for(int i=0; i<grafo->numVert; i++){
+        visitados[i] = 'n';
+    }
+    visitados[inicio] = 'v';
+    fila[fim++] = inicio;
+
+    int achou = 0;
+    while(ini < fim && !achou){
+        int atual = fila[ini++];
+        for(int j=0; j<grafo->numVert; j++){
+            if(grafo->matriz[atual][j] == 1 && visitados[j] == 'n'){
+                if(j == alvo){
+                    achou = 1;
+                    break;
+                }
+                visitados[j] = 'v';
+                fila[fim++] = j;
+            }
+        }
+    }
+
+    free(visitados);
+    free(fila);
+    return achou;
+}
+
+
+int distancia(GrafoMatriz *grafo, int origem, int destino){
     int *nivel = (int *) malloc(sizeof(int) * grafo->numVert);
     bfs_nivel(grafo, origem, nivel);
     int dist = nivel[destino];
@@ -286,7 +320,7 @@ int distancia(Grafo *grafo, int origem, int destino){
     return dist;
 }
 
-int diametro(Grafo *grafo){
+int diametro(GrafoMatriz *grafo){
     int diam = 0;
     int *nivel = (int *) malloc(sizeof(int) * grafo->numVert);
 
@@ -302,3 +336,93 @@ int diametro(Grafo *grafo){
     free(nivel);
     return diam;
 }
+
+
+Componentes *componentes_conexos(GrafoMatriz *grafo){
+    char *visitado = malloc(sizeof(char) * grafo->numVert);
+    for(int i=0; i<grafo->numVert; i++){
+        visitado[i] = 'n';
+    }
+
+    int *tamanhos = malloc(sizeof(int) * grafo->numVert);
+    int **vertices = malloc(sizeof(int *) * grafo->numVert);
+    int numComp = 0;
+
+    int *fila = malloc(sizeof(int) * grafo->numVert);
+
+    for(int i=0; i<grafo->numVert; i++){
+        if(visitado[i] == 'n'){
+            int ini = 0, fim = 0;
+            fila[fim++] = i;
+            visitado[i] = 'v';
+
+            int *compVertices = malloc(sizeof(int) * grafo->numVert);
+            int tamComp = 0;
+
+            while(ini < fim){
+                int atual = fila[ini++];
+                compVertices[tamComp++] = atual + 1; /* saida 1-indexada */
+
+                for(int j=0; j<grafo->numVert; j++){
+                    if(grafo->matriz[atual][j] == 1 && visitado[j] == 'n'){
+                        visitado[j] = 'v';
+                        fila[fim++] = j;
+                    }
+                }
+            }
+
+            compVertices = realloc(compVertices, sizeof(int) * tamComp);
+            vertices[numComp] = compVertices;
+            tamanhos[numComp] = tamComp;
+            numComp++;
+        }
+    }
+
+    free(fila);
+    free(visitado);
+
+    /* ordena por tamanho decrescente */
+    for(int i=0; i<numComp-1; i++){
+        int maior = i;
+        for(int j=i+1; j<numComp; j++){
+            if(tamanhos[j] > tamanhos[maior]){
+                maior = j;
+            }
+        }
+        if(maior != i){
+            int tAux = tamanhos[i];
+            tamanhos[i] = tamanhos[maior];
+            tamanhos[maior] = tAux;
+
+            int *vAux = vertices[i];
+            vertices[i] = vertices[maior];
+            vertices[maior] = vAux;
+        }
+    }
+
+    Componentes *comp = malloc(sizeof(Componentes));
+    comp->numComponentes = numComp;
+    comp->tamanhos = realloc(tamanhos, sizeof(int) * numComp);
+    comp->vertices = realloc(vertices, sizeof(int *) * numComp);
+
+    return comp;
+}
+
+
+void gerar_relatorio(GrafoMatriz *grafo, const char *arquivoSaida){
+    FILE *saida = fopen(arquivoSaida, "w");
+    if(saida == NULL){
+        printf("Erro ao abrir arquivo.\n");
+        return;
+    }
+
+    fprintf(saida, "Numero de vertices: %d\n", numero_vertices(grafo));
+    fprintf(saida, "Numero de arestas: %d\n", numero_arestas(grafo));
+    fprintf(saida, "Grau minimo: %d\n", grau_menor(grafo));
+    fprintf(saida, "Grau maximo: %d\n", grau_maior(grafo));
+    fprintf(saida, "Grau medio: %.2f\n", grau_medio(grafo));
+    fprintf(saida, "Mediana de grau: %.2f\n", mediana(grafo));
+
+    fclose(saida);
+}
+

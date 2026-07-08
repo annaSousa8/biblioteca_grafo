@@ -1,3 +1,8 @@
+#ifndef GRAFO_D_H
+#define GRAFO_D_H
+
+#include "componentes.h"
+
 typedef struct elem{
     int valor;
     int visitado;
@@ -7,30 +12,35 @@ typedef struct elem{
 typedef struct grafo{
     Elem **lista;
     int tam;
-}Grafo;
+}GrafoLista;
 
-Grafo * criar_grafo(int tam);
-void destroir( Grafo *g );
+GrafoLista * criar_grafo(int tam);
+void destroir( GrafoLista *g );
 
-int grafo_adicionar_no(Grafo *g, int n1, int n2);
+int grafo_adicionar_no(GrafoLista *g, int n1, int n2);
 
-int grafo_num_arestas( Grafo *g);
-int grafo_num_vertices( Grafo *g);
+int grafo_num_arestas( GrafoLista *g);
+int grafo_num_vertices( GrafoLista *g);
+int grafo_grau_min( GrafoLista *g);
+int grafo_grau_max( GrafoLista *g);
+float grafo_grau_medio(GrafoLista *g);
+float grafo_grau_mediano(GrafoLista *g);
 
-int grafo_grau_min( Grafo *g);
-int grafo_grau_max( Grafo *g);
-float grafo_grau_medio(Grafo *g);
-float grafo_grau_mediano(Grafo *g);
+void grafo_mostrar(GrafoLista *g);
+void grafo_limpar(GrafoLista *g);
 
-void grafo_mostrar(Grafo *g);
-void grafo_limpar(Grafo *g);
+void lerArquivo(GrafoLista *grafo, const char *nomeArquivo);
 
-void lerArquivo(Grafo *grafo, const char *nomeArquivo);
+int grafo_dfs_buscar(GrafoLista *g, int inicio, int alvo);
+int grafo_bfs_buscar(GrafoLista *g, int inicio, int alco);
 
-void dfs(Grafo *grafo, int idx);
-void alg_dfs(Grafo *g, int idx, int nvl, char *visitados);
+void grafo_bfs_nivel(GrafoLista *g, int inicio, int *nivel);
 
-int bfs(Grafo *grafo, int idx);
-int alg_bfs(Grafo *g, int *visitados, int *ordem);
+int grafo_distancia(GrafoLista *g, int origem, int destino);
+int grafo_diametro(GrafoLista *g);
 
-int diametro(Grafo *g);
+Componentes *grafo_componentes_conexos(GrafoLista *g);
+
+void grafo_gerar_relatorio(GrafoLista *g, const char *arquivoSaida);
+
+#endif // !GRAFO_D_H
